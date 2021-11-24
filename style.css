@@ -1,0 +1,6 @@
+.listSelected {
+    background-color: rgb(128, 128, 128);
+}
+.listUnselected {
+    background-color: unset; 
+}
