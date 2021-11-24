@@ -9,21 +9,20 @@ function addTask() {
   if (input.value.length > 0) {
     const li = document.createElement('li');
     li.innerText = input.value;
-    li.className = 'listUnselected';
     input.value = '';
     ol.appendChild(li);
   }
 
-ol.addEventListener('click', selected);
-
-function selected(event){
-  if(event.target.className.indexOf('listUnselected') !== -1) {
-    const selected = document.querySelectorAll('.listUnselected');
-    if (selected.length > 0) {
-      selected[0].classList.remove('listUnselected');
-      event.target.classList.add('listSelected');
-    }
+ol.addEventListener('click', colorTask);
+function colorTask(event) {
+  let selected = document.querySelector('.listSelected');
+  if(selected === null){
+    event.target.classList.add('listSelected');
+  } else {
+    selected.classList.remove('listSelected');
+    event.target.classList.add('listSelected');
   }
+
 }
 
 }
