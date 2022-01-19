@@ -1,84 +1,206 @@
-// Variáveis
-const buttonCriar = document.querySelector('#criar-tarefa');
+const criarHeader = () => {
+  // Cria header
+  const header = document.createElement('header');
+  document.body.appendChild(header);
+  // Cria H1
+  const h1 = document.createElement('h1');
+  h1.innerText = 'Minha Lista de Tarefas';
+  header.appendChild(h1);
+  // Cria P
+  const p = document.createElement('p');
+  p.id = 'funcionamento';
+  p.innerText = 'Clique duas vezes em um item para marcá-lo como completo';
+  header.appendChild(p);
+};
+criarHeader();
+
+const criaSectionMain = () => {
+  // Cria section
+  const section = document.createElement('section');
+  document.body.appendChild(section);
+  // Cria imput
+  const input = document.createElement('input');
+  input.id = 'texto-tarefa';
+  section.appendChild(input);
+  // Cria ol
+  const ol = document.createElement('ol');
+  ol.id = 'lista-tarefas';
+  section.appendChild(ol);
+};
+criaSectionMain();
+
+const criaNavegation1 = () => {
+  const nav = document.createElement('nav');
+  document.body.appendChild(nav);
+  // Cria buttonAdd
+  const buttonAdd = document.createElement('button');
+  buttonAdd.id = 'criar-tarefa';
+  buttonAdd.innerText = 'Adicionar';
+  nav.appendChild(buttonAdd);
+  // Cria buttonClear
+  const buttonClear = document.createElement('button');
+  buttonClear.id = 'apaga-tudo';
+  buttonClear.innerText = 'Apagar lista';
+  nav.appendChild(buttonClear);
+  // Cria apagaFinalizados
+  const buttonClearFinally = document.createElement('button');
+  buttonClearFinally.id = 'remover-finalizados';
+  buttonClearFinally.innerText = 'Apagar finalizados';
+  nav.appendChild(buttonClearFinally);
+};
+criaNavegation1();
+
+const nav = document.querySelector('nav');
+const criaNavegation2 = () => {
+  const buttonSave = document.createElement('button'); // Cria buttonSave
+  buttonSave.id = 'salvar-tarefas';
+  buttonSave.innerText = 'Salvar lista';
+  nav.appendChild(buttonSave);
+  const buttonClearMarcado = document.createElement('button'); // Cria apagarMarcado
+  buttonClearMarcado.id = 'remover-selecionado';
+  buttonClearMarcado.innerText = 'Apagar selecionado';
+  nav.appendChild(buttonClearMarcado);
+  // Cria buttonCima e buttonBaixo
+  const buttonCima = document.createElement('button');
+  buttonCima.id = 'mover-cima';
+  buttonCima.innerText = 'Subir';
+  nav.appendChild(buttonCima);
+  const buttonBaixo = document.createElement('button');
+  buttonBaixo.id = 'mover-baixo';
+  buttonBaixo.innerText = 'Descer';
+  nav.appendChild(buttonBaixo);
+};
+criaNavegation2();
+
+// Campo de declaração de variáveis
+const ol = document.querySelector('ol');
+const buttonAdd = document.querySelector('#criar-tarefa');
+const buttonClear = document.querySelector('#apaga-tudo');
+const buttonClearFinally = document.querySelector('#remover-finalizados');
+const buttonClearMarcado = document.querySelector('#remover-selecionado');
+const buttonCima = document.querySelector('#mover-cima');
+const buttonBaixo = document.querySelector('#mover-baixo');
+const buttonSave = document.querySelector('#salvar-tarefas');
 const input = document.querySelector('#texto-tarefa');
-const ol = document.querySelector('#lista-tarefas');
-const buttonApagar = document.querySelector('#apaga-tudo');
-const buttonDeleteFinal = document.getElementById('remover-finalizados');
-const buttonSaveTasks = document.getElementById('salvar-tarefas');
-const buttonRemoveSelect = document.getElementById('remover-selecionado');
 
-// Criação de tarefa
-buttonCriar.addEventListener('click', addTask);
-function addTask() {
-  if (input.value.length > 0) {
-    const li = document.createElement('li');
-    li.innerText = input.value;
-    input.value = '';
-    ol.appendChild(li);
-  }
-}
+const saveList = (list) => localStorage.setItem('list', list);
 
-// Atividades selecionadas
-ol.addEventListener('click', colorTask);
-function colorTask(event) {
+const marcado = (event) => {
   const selected = document.querySelector('.listSelected');
-  if (selected === null) {
-    event.target.classList.add('listSelected');
-  } else {
+  if (selected === null) event.target.classList.add('listSelected');
+  else {
     selected.classList.remove('listSelected');
     event.target.classList.add('listSelected');
   }
-}
+};
 
-// Atividades finalizadas
-let verificador = false;
-ol.addEventListener('dblclick', colorList);
-function colorList(event) {
-  if(verificador === false) {
-    event.target.classList.add('completed');
-    verificador = true;
-  } else {
-    event.target.classList.remove('completed');
-    verificador = false;
-  }
-}
+const riscado = (event) => {
+  const item = event.target;
+  const itemClassList = item.classList;
+  itemClassList.toggle('completed');
+};
 
-// Botão apagar tudo
-let list = document.getElementsByTagName('li');
-buttonApagar.addEventListener('click', deleteList);
-function deleteList() {
-  for(let index = list.length-1; index >= 0; index -= 1) {
-    let element = list[index];
-    ol.removeChild(element);
-  }
-}
+const initialize = () => {
+  ol.innerHTML = localStorage.getItem('list');
+  const element = ol.querySelectorAll('li');
+  element.forEach((li) => {
+    li.addEventListener('click', marcado);
+    li.addEventListener('dblclick', riscado);
+  });
+};
+initialize();
 
-// Botão apagar selecionado
-let finalizados = document.getElementsByClassName('completed');
-buttonDeleteFinal.addEventListener('click', deleteFinal);
-function deleteFinal() {
-  for(let index = finalizados.length-1; index >= 0; index -= 1) {
-    let elementFinal = finalizados[index];
-    ol.removeChild(elementFinal);
-  }
-}
+const adicionar = () => {
+  buttonAdd.addEventListener('click', () => {
+    // Cria li
+    if (input.value.length > 0) {
+      const li = document.createElement('li');
+      li.id = 'lista-tarefas';
+      li.innerText = input.value;
+      li.addEventListener('click', marcado);
+      li.addEventListener('dblclick', riscado);
+      ol.appendChild(li);
+      input.value = '';
+    }
+  });
+};
+adicionar();
 
-// Botão apagar finalizados
-let selecionados = document.getElementsByClassName('listSelected');
-buttonRemoveSelect.addEventListener('click', deleteFinal);
-function deleteFinal() {
-  for(let index = selecionados.length-1; index >= 0; index -= 1) {
-    let elementSelected = selecionados[index];
-    ol.removeChild(elementSelected);
-  }
-}
+const apagarTudo = () => {
+  // Apagar Li
+  buttonClear.addEventListener('click', () => {
+    ol.innerHTML = '';
+  });
+};
+apagarTudo();
 
-/* // Botão salvar lista
-buttonSaveTasks.addEventListener('click', saveTasks);
-function saveTasks() {
-  localStorage.setItem('tasks', JSON.stringify(list));
-}
-//localStorage.clear();
-// Chamada de função;
-let ListSave = localStorage.getItem('tasks', JSON.parse(list));
-    ol.parentNode(ListSave); */
+const apagaRiscados = () => {
+  buttonClearFinally.addEventListener('click', () => {
+    const complets = document.querySelectorAll('.completed');
+    complets.forEach((complet) => {
+      complet.remove();
+    });
+  });
+};
+apagaRiscados();
+
+const apagaMarcado = () => {
+  buttonClearMarcado.addEventListener('click', () => {
+    const selected = document.querySelector('.listSelected');
+    selected.remove();
+  });
+};
+apagaMarcado();
+
+const salvarLista = () => {
+  buttonSave.addEventListener('click', () => {
+    saveList(ol.innerHTML);
+  });
+};
+salvarLista();
+
+const subir = () => {
+  buttonCima.addEventListener('click', () => {
+    const selected = document.querySelector('.listSelected');
+    if (selected === null) {
+      return;
+    }
+    const item = selected.previousElementSibling;
+    if (item !== null) {
+      const text = item.innerText;
+      const classe = item.className;
+      item.innerText = selected.innerText;
+      item.className = selected.className;
+      selected.innerText = text;
+      selected.className = classe;
+    }
+  });
+};
+subir();
+
+const descer = () => {
+  buttonBaixo.addEventListener('click', () => {
+    const selected = document.querySelector('.listSelected');
+    if (selected === null) {
+      return;
+    }
+    const item = selected.nextElementSibling;
+    if (item !== null) {
+      const text = item.innerText;
+      const classe = item.className;
+      item.innerText = selected.innerText;
+      item.className = selected.className;
+      selected.innerText = text;
+      selected.className = classe;
+    }
+  });
+};
+descer();
+
+// Code review:
+//  Fábio Vicente: https://github.com/tryber/sd-018-b-project-todo-list/pull/127
+
+// Referências:
+//  NextElementSibling: https://developer.mozilla.org/en-US/docs/Web/API/Element/nextElementSibling
+//  PreviousElementSibling: https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling
+//  Toggle: https://developer.mozilla.org/en-US/docs/Web/API/DOMTokenList/toggle
