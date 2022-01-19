@@ -1,9 +1,11 @@
 .listSelected {
-    background-color: rgb(128, 128, 128);
+  background-color: gray;
 }
+
 .listUnselected {
-    background-color: unset; 
+  background-color: unset;
 }
+
 .completed {
-    text-decoration: line-through solid rgb(0, 0, 0);
+  text-decoration: line-through solid black;
 }
