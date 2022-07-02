@@ -197,9 +197,6 @@ const descer = () => {
 };
 descer();
 
-// Code review:
-//  Fábio Vicente: https://github.com/tryber/sd-018-b-project-todo-list/pull/127
-
 // Referências:
 //  NextElementSibling: https://developer.mozilla.org/en-US/docs/Web/API/Element/nextElementSibling
 //  PreviousElementSibling: https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling
